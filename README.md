@@ -13,12 +13,26 @@ cft automatically processes these reports and converts inline citations to footn
 
 ## Installation
 
-### Using prebuilt binaries (recommended)
+### Using curl (recommended)
+```bash
+curl -fsSL https://raw.githubusercontent.com/suin/cft/main/install.sh | sh
+```
+This will automatically:
+- Detect your OS and architecture
+- Download the appropriate binary
+- Install it to `/usr/local/bin`
+- Set the required permissions
+
+### Manual Installation
 Download the appropriate binary for your platform from [GitHub Releases](https://github.com/suin/cft/releases):
 - Linux (x64)
 - Linux (x64, older CPUs)
 - macOS (x64)
 - macOS (ARM64)
+
+After downloading:
+1. Make the binary executable: `chmod +x cft-*`
+2. Move it to a directory in your PATH: `sudo mv cft-* /usr/local/bin/cft`
 
 ### Building from source
 ```bash

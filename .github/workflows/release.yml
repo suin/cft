@@ -30,6 +30,7 @@ jobs:
             dist/cft-linux-baseline
             dist/cft-macos
             dist/cft-macos-arm64
+            install.sh
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

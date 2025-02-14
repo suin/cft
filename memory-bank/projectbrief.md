@@ -31,6 +31,30 @@ ChatGPT Deep researchがMarkdownレポートを生成する際、出典をイン
 cft <file.md>
 ```
 
+### 配布方法
+1. **プリビルドバイナリ**
+   - GitHub Releasesを通じた配布
+   - プラットフォームごとの最適化バイナリ
+     - Linux x64（モダンCPU向け）
+     - Linux x64（古いCPU向け）
+     - macOS x64
+     - macOS ARM64
+
+2. **インストール方法**
+   - curlを使用した自動インストール（推奨）
+     ```bash
+     curl -fsSL https://raw.githubusercontent.com/suin/cft/main/install.sh | sh
+     ```
+   - GitHub Releasesからの手動インストール
+     * バイナリのダウンロード
+     * 実行権限の付与
+     * PATHへの追加
+
+3. **ソースからのビルド**
+   - Devboxを使用した開発環境の構築
+   - クロスプラットフォームビルドのサポート
+   - 最適化オプションの提供
+
 ## 制約条件
 - 大規模なMarkdownファイルでも実用的な処理時間で完了すること
 - メモリ使用量を最適化すること
@@ -43,3 +67,4 @@ cft <file.md>
 3. ファイルの整合性を維持できること
 4. エラー発生時に適切に処理を中断できること
 5. 実用的なパフォーマンスを実現できること
+6. 各プラットフォームで正常に動作すること
