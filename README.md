@@ -13,12 +13,26 @@ cft automatically processes these reports and converts inline citations to footn
 
 ## Installation
 
-```bash
-# Install Bun (if not installed)
-curl -fsSL https://bun.sh/install | bash
+### Using prebuilt binaries (recommended)
+Download the appropriate binary for your platform from [GitHub Releases](https://github.com/suin/cft/releases):
+- Linux (x64)
+- Linux (x64, older CPUs)
+- macOS (x64)
+- macOS (ARM64)
 
-# Install cft
-bun install cft
+### Building from source
+```bash
+# Install Devbox (if not installed)
+curl -fsSL https://get.jetpack.io/devbox | bash
+
+# Clone the repository
+git clone https://github.com/suin/cft.git
+cd cft
+
+# Build
+devbox run build
+
+# The binaries will be available in the dist/ directory
 ```
 
 ## Usage
@@ -40,6 +54,41 @@ According to recent research [^example.com-1], the findings suggest...
 
 [^example.com-1]: [Title](https://example.com/page)
 ```
+
+## Platform Support
+
+- Linux x64 (modern CPUs)
+- Linux x64 (baseline, for older CPUs)
+- macOS x64
+- macOS ARM64 (Apple Silicon)
+
+## Development
+
+### Requirements
+- Bun
+- Devbox
+- VSCode (recommended)
+
+### Setup
+```bash
+# Install dependencies
+devbox shell
+bun install
+```
+
+### Build
+```bash
+# Build for all platforms
+devbox run build
+```
+
+### Release
+```bash
+# Create and push a new version tag
+git tag v1.0.0
+git push origin v1.0.0
+```
+GitHub Actions will automatically build and deploy the binaries to GitHub Releases.
 
 ## Limitations
 - UTF-8 encoded files only

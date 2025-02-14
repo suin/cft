@@ -5,17 +5,18 @@
 ### コア技術
 - **言語**: TypeScript
 - **ランタイム**: Bun
-- **開発環境**: VSCode
+- **開発環境**: VSCode, Devbox
+- **CI/CD**: GitHub Actions
 
 ### 主要な依存関係
 ```json
 {
-  "name": "cft",
+  "name": "@suin/cft",
   "version": "1.0.0",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "type": "module",
   "bin": {
-    "cft": "./index.ts"
+    "cft": "./cft"
   }
 }
 ```
@@ -27,11 +28,17 @@
    - JavaScriptランタイム
    - パッケージマネージャー
    - TypeScriptコンパイラ
+   - クロスプラットフォームビルド
 
 2. **VSCode**
    - 推奨される開発IDE
    - TypeScriptサポート
    - デバッグ機能
+
+3. **Devbox**
+   - 開発環境の一貫性確保
+   - ビルドプロセスの標準化
+   - 依存関係の管理
 
 ### 開発環境構築手順
 ```bash
@@ -96,21 +103,38 @@ bun install
 - メモリ使用量の測定
 - 処理時間の計測
 
-## デプロイメント
+## ビルドとデプロイメント
 
-### 1. パッケージング
-```bash
-# ビルド
-bun build ./src/index.ts --outfile=dist/cft
-
-# 実行権限の付与
-chmod +x dist/cft
+### 1. ビルド設定
+```json
+{
+  "scripts": {
+    "build": [
+      "bun build --compile --minify --sourcemap --bytecode --target=bun-linux-x64 ./src/index.ts --outfile dist/cft-linux",
+      "bun build --compile --minify --sourcemap --bytecode --target=bun-linux-x64-baseline ./src/index.ts --outfile dist/cft-linux-baseline",
+      "bun build --compile --minify --sourcemap --bytecode --target=bun-darwin-x64 ./src/index.ts --outfile dist/cft-macos",
+      "bun build --compile --minify --sourcemap --bytecode --target=bun-darwin-arm64 ./src/index.ts --outfile dist/cft-macos-arm64"
+    ]
+  }
+}
 ```
 
-### 2. 配布
-- npmレジストリでの公開
-- バイナリパッケージの提供
-- インストール手順の文書化
+### 2. 最適化オプション
+- `--minify`: コードサイズの最適化
+- `--sourcemap`: デバッグ情報の埋め込み
+- `--bytecode`: 起動時間の改善
+- `--compile`: シングルバイナリ生成
+
+### 3. プラットフォームサポート
+- Linux x64（モダンCPU向け）
+- Linux x64（古いCPU向け）
+- macOS x64
+- macOS ARM64
+
+### 4. 成果物管理
+- distディレクトリでの管理
+- .gitignoreでの除外設定
+- GitHub Releasesでの配布
 
 ## 監視と分析
 

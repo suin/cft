@@ -1,18 +1,19 @@
 {
-  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.7/.schema/devbox.schema.json",
-  "packages": [
-    "bun@latest",
-    "biome@latest",
-    "nodejs@latest"
-  ],
-  "shell": {
-    "init_hook": [
-      "echo 'Welcome to devbox!' > /dev/null"
-    ],
-    "scripts": {
-      "test": [
-        "echo \"Error: no test specified\" && exit 1"
-      ]
-    }
-  }
+	"$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.7/.schema/devbox.schema.json",
+	"packages": ["bun@latest", "biome@latest", "nodejs@latest"],
+	"shell": {
+		"init_hook": ["echo 'Welcome to devbox!' > /dev/null"],
+		"scripts": {
+			"test": ["echo \"Error: no test specified\" && exit 1"],
+			"build": [
+				"echo 'Building optimized binaries for multiple platforms...'",
+				"mkdir -p dist",
+				"bun build --compile --minify --sourcemap --bytecode --target=bun-linux-x64 ./src/index.ts --outfile dist/cft-linux",
+				"bun build --compile --minify --sourcemap --bytecode --target=bun-linux-x64-baseline ./src/index.ts --outfile dist/cft-linux-baseline",
+				"bun build --compile --minify --sourcemap --bytecode --target=bun-darwin-x64 ./src/index.ts --outfile dist/cft-macos",
+				"bun build --compile --minify --sourcemap --bytecode --target=bun-darwin-arm64 ./src/index.ts --outfile dist/cft-macos-arm64",
+				"chmod +x dist/cft-*"
+			]
+		}
+	}
 }

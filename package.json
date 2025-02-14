@@ -1,13 +1,17 @@
 {
-  "name": "@suin/cft",
-  "module": "src/index.ts",
-  "type": "module",
-  "devDependencies": {
-    "@tsconfig/bun": "^1.0.7",
-    "@tsconfig/strictest": "^2.0.5",
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  }
+	"name": "@suin/cft",
+	"version": "1.0.0",
+	"module": "src/index.ts",
+	"type": "module",
+	"bin": {
+		"cft": "./cft"
+	},
+	"devDependencies": {
+		"@tsconfig/bun": "^1.0.7",
+		"@tsconfig/strictest": "^2.0.5",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	}
 }
