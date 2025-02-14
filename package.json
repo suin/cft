@@ -1,6 +1,6 @@
 {
 	"name": "@suin/cft",
-	"version": "1.0.0",
+	"version": "0.1.0",
 	"module": "src/index.ts",
 	"type": "module",
 	"bin": {
