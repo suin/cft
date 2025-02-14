@@ -2,7 +2,7 @@
  * Parser module for handling Markdown content
  */
 
-import { isValidUrl } from "./utils";
+import { isValidUrl, extractTextFragment } from "./utils";
 
 /**
  * Represents a citation found in the text
@@ -67,7 +67,8 @@ export function findInlineCitations(text: string): Citation[] {
  */
 export function findExistingFootnotes(text: string): Footnote[] {
 	const footnotes: Footnote[] = [];
-	const regex = /\[\^(.*?)\]:\s*\[(.*?)\]\((.*?)\)/g;
+	const regex =
+		/\[\^(.*?)\]:\s*\[(.*?)\]\((.*?)\)(?:\s*<blockquote>.*?<\/blockquote>)?/g;
 	let match: RegExpExecArray | null;
 
 	while (true) {
@@ -123,7 +124,12 @@ export function getFootnotesInsertPosition(text: string): number {
  */
 export function createFootnotesSection(footnotes: Footnote[]): string {
 	const content = footnotes
-		.map((fn) => `${fn.id}: [${fn.title}](${fn.url})`)
+		.map((fn) => {
+			const fragment = extractTextFragment(fn.url);
+			return fragment
+				? `${fn.id}: [${fn.title}](${fn.url}) <blockquote>${fragment}</blockquote>`
+				: `${fn.id}: [${fn.title}](${fn.url})`;
+		})
 		.join("\n");
 
 	return `<!-- footernotes:begin -->

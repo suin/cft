@@ -5,6 +5,9 @@ import {
 	isUtf8,
 	isMarkdownFile,
 	generateFootnoteId,
+	extractTextFragment,
+	convertNewlinesToBrTags,
+	createBlockquote,
 } from "./utils";
 
 describe("utils", () => {
@@ -60,6 +63,63 @@ describe("utils", () => {
 	describe("generateFootnoteId", () => {
 		test("should generate correct footnote ID format", () => {
 			expect(generateFootnoteId("example.com", 1)).toBe("[^example.com-1]");
+		});
+	});
+
+	describe("extractTextFragment", () => {
+		test("should extract and decode text fragment from URL", () => {
+			const url = "https://example.com/page#:~:text=Hello%20World";
+			expect(extractTextFragment(url)).toBe("Hello World");
+		});
+
+		test("should handle URLs without text fragment", () => {
+			const url = "https://example.com/page#section1";
+			expect(extractTextFragment(url)).toBe(null);
+		});
+
+		test("should handle invalid URLs", () => {
+			expect(extractTextFragment("not-a-url")).toBe(null);
+		});
+
+		test("should escape HTML in text fragment", () => {
+			const url =
+				"https://example.com/page#:~:text=Text%20with%20<strong>HTML</strong>";
+			expect(extractTextFragment(url)).toBe(
+				"Text with &lt;strong&gt;HTML&lt;/strong&gt;",
+			);
+		});
+
+		test("should handle multiple HTML entities", () => {
+			const url = "https://example.com/page#:~:text=A%20&%20B%20<%20C%20>%20D";
+			expect(extractTextFragment(url)).toBe("A &amp; B &lt; C &gt; D");
+		});
+	});
+
+	describe("convertNewlinesToBrTags", () => {
+		test("should convert newlines to <br> tags", () => {
+			const input = "Line 1\nLine 2\nLine 3";
+			expect(convertNewlinesToBrTags(input)).toBe("Line 1<br>Line 2<br>Line 3");
+		});
+
+		test("should handle text without newlines", () => {
+			const input = "Single line text";
+			expect(convertNewlinesToBrTags(input)).toBe("Single line text");
+		});
+	});
+
+	describe("createBlockquote", () => {
+		test("should create blockquote with text", () => {
+			const input = "Sample text";
+			expect(createBlockquote(input)).toBe(
+				"<blockquote>Sample text</blockquote>",
+			);
+		});
+
+		test("should handle text with newlines", () => {
+			const input = "Line 1\nLine 2";
+			expect(createBlockquote(input)).toBe(
+				"<blockquote>Line 1<br>Line 2</blockquote>",
+			);
 		});
 	});
 });

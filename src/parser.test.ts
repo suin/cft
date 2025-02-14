@@ -57,6 +57,20 @@ describe("parser", () => {
 			expect(footnotes).toHaveLength(2);
 		});
 
+		test("should find footnotes with blockquotes", () => {
+			const text = `
+[^example.com-1]: [Title](https://example.com#:~:text=Quote) <blockquote>Quoted text</blockquote>
+[^example.com-2]: [Another](https://example.com/page)
+			`;
+			const footnotes = findExistingFootnotes(text);
+			expect(footnotes).toHaveLength(2);
+			expect(footnotes[0]).toEqual({
+				id: "[^example.com-1]",
+				title: "Title",
+				url: "https://example.com#:~:text=Quote",
+			});
+		});
+
 		test("should ignore invalid URLs", () => {
 			const text = "[^example-1]: [Title](not-a-url)";
 			const footnotes = findExistingFootnotes(text);
@@ -131,6 +145,34 @@ Some text
 			);
 			expect(section).toContain(
 				"[^example.com-2]: [Two](https://example.com/2)",
+			);
+		});
+
+		test("should handle footnotes with text fragments", () => {
+			const footnotes = [
+				{
+					id: "[^example.com-1]",
+					title: "Title",
+					url: "https://example.com#:~:text=Hello%20World",
+				},
+			];
+			const section = createFootnotesSection(footnotes);
+			expect(section).toContain(
+				"[^example.com-1]: [Title](https://example.com#:~:text=Hello%20World) <blockquote>Hello World</blockquote>",
+			);
+		});
+
+		test("should handle footnotes with HTML in text fragments", () => {
+			const footnotes = [
+				{
+					id: "[^example.com-1]",
+					title: "Title",
+					url: "https://example.com#:~:text=Text%20with%20<strong>HTML</strong>",
+				},
+			];
+			const section = createFootnotesSection(footnotes);
+			expect(section).toContain(
+				"[^example.com-1]: [Title](https://example.com#:~:text=Text%20with%20<strong>HTML</strong>) <blockquote>Text with &lt;strong&gt;HTML&lt;/strong&gt;</blockquote>",
 			);
 		});
 	});

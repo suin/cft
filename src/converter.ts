@@ -9,7 +9,11 @@ import {
 	getFootnotesInsertPosition,
 	createFootnotesSection,
 } from "./parser";
-import { extractDomain, generateFootnoteId } from "./utils";
+import {
+	extractDomain,
+	generateFootnoteId,
+	extractTextFragment,
+} from "./utils";
 
 /**
  * Represents a domain counter for generating unique footnote IDs
@@ -143,7 +147,14 @@ export function convertToFootnotes(text: string): string {
 		const insertPosition = getFootnotesInsertPosition(result);
 		const endMarkerPosition = result.indexOf("<!-- footernotes:end -->");
 		result = `${result.slice(0, insertPosition)}
-${allFootnotes.map((fn) => `${fn.id}: [${fn.title}](${fn.url})`).join("\n")}
+${allFootnotes
+	.map((fn) => {
+		const fragment = extractTextFragment(fn.url);
+		return fragment
+			? `${fn.id}: [${fn.title}](${fn.url}) <blockquote>${fragment}</blockquote>`
+			: `${fn.id}: [${fn.title}](${fn.url})`;
+	})
+	.join("\n")}
 ${result.slice(endMarkerPosition)}`;
 	} else {
 		result = `${result.trim()}\n\n${footnotesSection}`;

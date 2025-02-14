@@ -163,6 +163,34 @@ try {
 - バイトコードコンパイル
 - ソースマップの埋め込み
 
+### 注釈形式の設計判断
+
+1. **フラグメント識別子の処理**
+   - URLのフラグメント識別子（#:~:text=...）を引用内容として表示する理由：
+     - 同一記事の異なる箇所を参照する場合の区別
+     - 引用箇所の具体的な内容の明示
+     - 文脈の明確化と可読性の向上
+     - 参照元の特定の部分への直接的なリンク
+
+2. **HTMLタグの使用**
+   - `<blockquote>`タグの採用理由：
+     - Markdownエディタでの可視性向上
+     - セマンティックなHTML構造の維持
+     - CSSによるスタイリングの容易さ
+     - 引用テキストの明確な区別
+
+3. **改行の処理**
+   - `<br>`タグの採用理由：
+     - 1行1注釈ルールの維持
+     - パース処理の簡素化
+     - 引用テキスト内の改行の保持
+     - 注釈セクションの構造の一貫性
+
+### 注釈の例
+```markdown
+[^example-1]: [Understanding Web Standards](https://example.com/web-standards#:~:text=Web%20standards%20define) <blockquote>Web standards define the rules and guidelines for consistent web development.</blockquote>
+```
+
 ## テスト戦略
 
 ### 1. ユニットテスト
