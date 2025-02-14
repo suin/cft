@@ -29,16 +29,19 @@ dist/             # ビルド成果物
 - インライン出典から注釈への変換を担当
 - 注釈IDの生成と管理
 - 注釈セクションの生成
+- URL重複の検出と最適化
 
 ### 3. Markdownパーサー (parser.ts)
 - Markdownファイルの読み込み
 - インライン出典の検出
 - 既存の注釈の解析
+- テキストフラグメントの抽出
 
 ### 4. ユーティリティ (utils.ts)
 - URL解析
 - ドメイン抽出
 - ファイル操作
+- フラグメント識別子の処理
 
 ## データフロー
 
@@ -59,10 +62,12 @@ flowchart TD
    - インライン出典のパターンマッチング
    - 既存注釈の検出
    - URLの妥当性チェック
+   - テキストフラグメントの解析
 
 3. **変換処理**
    - ドメインベースの注釈ID生成
-   - 重複チェック
+   - URL重複の検出と最適化
+   - フラグメントテキストの抽出と整形
    - 注釈セクションの構築
 
 4. **出力処理**
@@ -110,16 +115,24 @@ flowchart TD
 - `CitationConverter` クラス
   - 注釈IDの一意性を保証
   - ドメインカウンターの管理
+  - URL重複の追跡
 
 ### 2. ストラテジー
 - URL解析
   - 異なるURL形式に対する柔軟な対応
+  - フラグメント識別子の処理
   - 将来的な拡張性の確保
 
 ### 3. オブザーバー
 - 変換プロセスの監視
   - 進捗状況の通知
   - エラー報告
+
+### 4. フライウェイト
+- URL重複排除
+  - 同一URLの共有
+  - メモリ使用量の最適化
+  - 参照の一貫性維持
 
 ## エラーハンドリング戦略
 
@@ -152,6 +165,7 @@ try {
 ### 1. メモリ使用量
 - ストリーム処理の採用
 - 大規模ファイルの効率的な処理
+- URL重複排除による最適化
 
 ### 2. 処理速度
 - 正規表現の最適化
@@ -171,6 +185,10 @@ try {
      - 引用箇所の具体的な内容の明示
      - 文脈の明確化と可読性の向上
      - 参照元の特定の部分への直接的なリンク
+   - フラグメントテキストの抽出と整形：
+     - URLデコードの適用
+     - 改行とスペースの正規化
+     - HTML特殊文字のエスケープ
 
 2. **HTMLタグの使用**
    - `<blockquote>`タグの採用理由：
@@ -186,9 +204,19 @@ try {
      - 引用テキスト内の改行の保持
      - 注釈セクションの構造の一貫性
 
+4. **URL重複の最適化**
+   - 同一URLの注釈の統合：
+     - 重複URLの検出
+     - 既存注釈の再利用
+     - 参照の一貫性維持
+     - メモリ使用量の削減
+
 ### 注釈の例
 ```markdown
-[^example-1]: [Understanding Web Standards](https://example.com/web-standards#:~:text=Web%20standards%20define) <blockquote>Web standards define the rules and guidelines for consistent web development.</blockquote>
+[^example-1]: [Web Standards](https://example.com/standards#:~:text=Web%20standards%20define) <blockquote>Web standards define the rules and guidelines for consistent web development.</blockquote>
+
+# 重複URLの場合、同じ注釈IDを再利用
+[^example-1]
 ```
 
 ## テスト戦略
@@ -197,13 +225,17 @@ try {
 - URL解析
 - 注釈ID生成
 - パターンマッチング
+- フラグメントテキスト処理
+- URL重複検出
 
 ### 2. 統合テスト
 - ファイル変換プロセス
 - エラーハンドリング
 - エッジケース
+- 重複URL最適化
 
 ### 3. パフォーマンステスト
 - 大規模ファイル
 - 多数の出典
 - メモリ使用量
+- URL重複の効率
