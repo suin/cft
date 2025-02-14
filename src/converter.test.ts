@@ -87,4 +87,55 @@ Second ([Two](https://another.com/2))`;
 		const input = "Text with ([Title](invalid-url)) citation";
 		expect(() => convertToFootnotes(input)).not.toThrow();
 	});
+
+	test("should use same footnote ID for identical URLs", () => {
+		const input =
+			"First citation ([Title](https://example.com/page))\nSecond citation ([Another Title](https://example.com/page))";
+		const expected =
+			"First citation [^example.com-1]\nSecond citation [^example.com-1]\n\n<!-- footernotes:begin -->\n[^example.com-1]: [Title](https://example.com/page)\n<!-- footernotes:end -->";
+		expect(convertToFootnotes(input)).toBe(expected);
+	});
+
+	test("should reuse existing footnote ID for same URL", () => {
+		const input = `Text with ([New Title](https://example.com/existing)) citation
+
+<!-- footernotes:begin -->
+[^example.com-1]: [Existing](https://example.com/existing)
+<!-- footernotes:end -->`;
+		const expected = `Text with [^example.com-1] citation
+
+<!-- footernotes:begin -->
+[^example.com-1]: [Existing](https://example.com/existing)
+<!-- footernotes:end -->`;
+		expect(convertToFootnotes(input)).toBe(expected);
+	});
+
+	test("should maintain first title for identical URLs with different titles", () => {
+		const input =
+			"First ([Title One](https://example.com/page))\nSecond ([Title Two](https://example.com/page))\nThird ([Title Three](https://example.com/page))";
+		const result = convertToFootnotes(input);
+		expect(result).toContain("[Title One](https://example.com/page)");
+		expect(result).not.toContain("[Title Two](https://example.com/page)");
+		expect(result).not.toContain("[Title Three](https://example.com/page)");
+		// Extract footnote IDs from text before the footnotes section
+		const mainText = result.split("<!-- footernotes:begin -->")[0] || result;
+		const matches = mainText.match(/\[\^example\.com-\d\]/g) || [];
+		expect(matches.length).toBe(3);
+		expect(new Set(matches).size).toBe(1); // Ensure all footnote IDs are the same
+	});
+
+	test("should handle URL deduplication across multiple domains", () => {
+		const input = `
+First ([One](https://example.com/1))
+Second ([Two](https://example.com/1))
+Third ([Three](https://another.com/1))
+Fourth ([Four](https://another.com/1))`;
+		const result = convertToFootnotes(input);
+		expect(result).toMatch(/\[\^example\.com-1\].*\[\^example\.com-1\]/s);
+		expect(result).toMatch(/\[\^another\.com-1\].*\[\^another\.com-1\]/s);
+		expect(result).toContain("[One](https://example.com/1)");
+		expect(result).toContain("[Three](https://another.com/1)");
+		expect(result).not.toContain("[Two](https://example.com/1)");
+		expect(result).not.toContain("[Four](https://another.com/1)");
+	});
 });
