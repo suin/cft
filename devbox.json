@@ -4,7 +4,7 @@
 	"shell": {
 		"init_hook": ["echo 'Welcome to devbox!' > /dev/null"],
 		"scripts": {
-			"test": ["echo \"Error: no test specified\" && exit 1"],
+			"test": ["bun test --coverage"],
 			"build": [
 				"echo 'Building optimized binaries for multiple platforms...'",
 				"mkdir -p dist",
