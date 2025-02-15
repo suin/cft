@@ -39,7 +39,7 @@ interface Footnote {
  */
 export function findInlineCitations(text: string): Citation[] {
 	const citations: Citation[] = [];
-	const regex = /\(\[([^\]]+)\]\(([^)]+)\)\)/g;
+	const regex = /\(\[(.*?)\]\((.*?)\)\)/gs;
 	let match: RegExpExecArray | null;
 
 	while (true) {

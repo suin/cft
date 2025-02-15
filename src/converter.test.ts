@@ -99,6 +99,19 @@ Second ([Two](https://another.com/2))`;
 		expect(convertToFootnotes(input)).toBe(expected);
 	});
 
+	test("should handle complex text with multiple newlines", () => {
+		const input =
+			"Text ([Text [Text5] Text2\n Text4](http://example.com/#:~:text=Text6)) ([Text3](https://www.example.com/#:~:text=Text7))。";
+		const expected = `Text [^example.com-1] [^www.example.com-1]。
+
+<!-- footernotes:begin -->
+[^example.com-1]: [Text [Text5] Text2  Text4](http://example.com/#:~:text=Text6) <blockquote>Text6</blockquote>
+[^www.example.com-1]: [Text3](https://www.example.com/#:~:text=Text7) <blockquote>Text7</blockquote>
+<!-- footernotes:end -->`;
+
+		expect(convertToFootnotes(input)).toBe(expected);
+	});
+
 	test("should use same footnote ID for identical URLs", () => {
 		const input =
 			"First citation ([Title](https://example.com/page))\nSecond citation ([Another Title](https://example.com/page))";
