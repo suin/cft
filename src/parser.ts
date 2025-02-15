@@ -39,7 +39,7 @@ interface Footnote {
  */
 export function findInlineCitations(text: string): Citation[] {
 	const citations: Citation[] = [];
-	const regex = /\(\[(.*?)\]\((.*?)\)\)/g;
+	const regex = /\(\[([^\]]+)\]\(([^)]+)\)\)/g;
 	let match: RegExpExecArray | null;
 
 	while (true) {
@@ -49,7 +49,7 @@ export function findInlineCitations(text: string): Citation[] {
 		if (title && url && isValidUrl(url)) {
 			citations.push({
 				fullMatch,
-				title,
+				title: title.replace(/\n/g, " "),
 				url,
 				start: match.index,
 				end: match.index + fullMatch.length,

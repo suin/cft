@@ -88,6 +88,17 @@ Second ([Two](https://another.com/2))`;
 		expect(() => convertToFootnotes(input)).not.toThrow();
 	});
 
+	test("should convert citation with newline in title", () => {
+		const input =
+			"Text with ([Title\nContinued](https://example.com)) citation";
+		const expected = `Text with [^example.com-1] citation
+
+<!-- footernotes:begin -->
+[^example.com-1]: [Title Continued](https://example.com)
+<!-- footernotes:end -->`;
+		expect(convertToFootnotes(input)).toBe(expected);
+	});
+
 	test("should use same footnote ID for identical URLs", () => {
 		const input =
 			"First citation ([Title](https://example.com/page))\nSecond citation ([Another Title](https://example.com/page))";

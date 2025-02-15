@@ -34,6 +34,20 @@ describe("parser", () => {
 			const citations = findInlineCitations(text);
 			expect(citations).toHaveLength(0);
 		});
+
+		test("should find citation with newline in title", () => {
+			const text =
+				"Text with ([Title\nContinued](https://example.com)) citation";
+			const citations = findInlineCitations(text);
+			expect(citations).toHaveLength(1);
+			expect(citations[0]).toEqual({
+				fullMatch: "([Title\nContinued](https://example.com))",
+				title: "Title Continued",
+				url: "https://example.com",
+				start: text.indexOf("(["),
+				end: text.indexOf("))") + 2,
+			});
+		});
 	});
 
 	describe("findExistingFootnotes", () => {
