@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2024-02-15
+
+### Added
+- Support for titles with newlines in citations
+
 ## [0.2.0] - 2024-02-14
 
 ### Added
