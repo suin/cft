@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 2024-02-15
+
+### Fixed
+- Fix regex pattern to handle titles with brackets and newlines
+
 ## [0.2.1] - 2024-02-15
 
 ### Added
